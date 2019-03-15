@@ -1,26 +1,55 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
+import Header from './Components/Header';
+import Courses from './Components/Courses';
+import UserSignIn from './Components/UserSignIn';
+import UserSignUp from './Components/UserSignUp';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      courses: [],
+    };
+  }
+
+  componentDidMount() {
+    //lifecycle methods
+    // fetch('http://localhost:5000/api/courses')
+    //     .then(response => response.json())
+    //     .then(responseData => {
+    //       this.setState({ courses: responseData });
+    //     })
+    //     .catch(error => console.log('Error fetching data'));
+    axios.get('http://localhost:5000/api/courses')
+        .then(response =>{
+          this.setState({
+            courses: response.data
+          });
+        })
+        .catch(error =>{
+          console.log('Error fetching and parsing data', error);
+        });
+  }
+
   render() {
+    // console.log(this.state.courses);
+
+    const myCoursePage = (props) =>{
+      return(
+          <Courses courses = {this.state.courses}/>
+      );
+    };
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <BrowserRouter>
+          <div>
+            <Header />
+            <Route exact path="/" render={myCoursePage}/>
+            <Route exact path='/signin' component={UserSignIn}/>
+            <Route path='/signup' component={UserSignUp}/>
+          </div>
+        </BrowserRouter>
     );
   }
 }
