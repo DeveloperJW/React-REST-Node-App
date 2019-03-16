@@ -2,6 +2,25 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 class CreateCourse extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      title: "",
+      description: "",
+      estimatedTime:"",
+      materialsNeeded:""
+    };
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+  };
   render() {
     return (
         <div className="bounds course--detail">
@@ -16,7 +35,7 @@ class CreateCourse extends Component {
                 </ul>
               </div>
             </div>
-            <form>
+            <form onSubmit={this.handleSubmit}>
               <div className="grid-66">
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
