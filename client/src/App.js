@@ -5,6 +5,12 @@ import Header from './Components/Header';
 import Courses from './Components/Courses';
 import UserSignIn from './Components/UserSignIn';
 import UserSignUp from './Components/UserSignUp';
+import CourseDetail from './Components/CourseDetail';
+import CreateCourse from './Components/CreateCourse';
+import UpdateCourse from './Components/UpdateCourse';
+import NotFound from './Components/NotFound';
+import Forbidden from './Components/Forbidden';
+import UnhandledError from './Components/UnhandledError';
 
 class App extends Component {
   constructor() {
@@ -23,12 +29,12 @@ class App extends Component {
     //     })
     //     .catch(error => console.log('Error fetching data'));
     axios.get('http://localhost:5000/api/courses')
-        .then(response =>{
+        .then(response => {
           this.setState({
-            courses: response.data
+            courses: response.data,
           });
         })
-        .catch(error =>{
+        .catch(error => {
           console.log('Error fetching and parsing data', error);
         });
   }
@@ -36,18 +42,24 @@ class App extends Component {
   render() {
     // console.log(this.state.courses);
 
-    const myCoursePage = (props) =>{
-      return(
-          <Courses courses = {this.state.courses}/>
+    const myCoursePage = (props) => {
+      return (
+          <Courses courses={this.state.courses}/>
       );
     };
     return (
         <BrowserRouter>
           <div>
-            <Header />
+            <Header/>
             <Route exact path="/" render={myCoursePage}/>
-            <Route exact path='/signin' component={UserSignIn}/>
+            <Route path='/signin' component={UserSignIn}/>
             <Route path='/signup' component={UserSignUp}/>
+            <Route path='/courses/create' component={CreateCourse}/>
+            <Route exact path="/courses/:id" component={CourseDetail}/>
+            <Route path="/courses/:id/update" component={UpdateCourse}/>
+            <Route path="/notfound" component={NotFound}/>
+            <Route path="/forbidden" component={Forbidden}/>
+            <Route path="/error" component={UnhandledError}/>
           </div>
         </BrowserRouter>
     );

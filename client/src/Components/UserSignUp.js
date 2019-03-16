@@ -28,13 +28,14 @@ class UserSignUp extends Component {
                             value=""/></div>
                 <div className="grid-100 pad-bottom">
                   <button className="button" type="submit">Sign Up</button>
-                  <button className="button button-secondary"
-                          onClick="event.preventDefault(); location.href='index.html';">Cancel
-                  </button>
+                  <Link to="/">
+                    <button className="button button-secondary">Cancel</button>
+                  </Link>
                 </div>
               </form>
             </div>
-            <p>Already have a user account? <Link to ="/signin">Click here</Link> to sign in!</p>
+            <p>Already have a user account? <Link to="/signin">Click
+              here</Link> to sign in!</p>
           </div>
         </div>
     );
