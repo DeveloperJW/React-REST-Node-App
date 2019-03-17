@@ -20,15 +20,23 @@ class UserSignIn extends Component {
   // handleSubmit = event => {
   //   event.preventDefault();
   //   console.log(event);
+  //   this.props.history.goBack();
   // };
+  backToPreviousPage = () =>{
+    if (localStorage.getItem('user')){
+      this.props.history.goBack();
+    }
+  };
 
   render() {
+    // console.log(this.props.history);
     return (
         <Consumer>
           {({actions})=>{
             const handleSubmit = (e) =>{
               e.preventDefault();
               actions.signIn(this.state.emailAddress, this.state.password);
+              this.backToPreviousPage();
             };
         return(
             <div className="bounds">

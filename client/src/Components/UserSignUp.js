@@ -7,59 +7,93 @@ class UserSignUp extends Component {
     super(props);
 
     this.state = {
-      firstName:"",
-      lastName:"",
-      emailAddress: "",
-      password: "",
-      confirmPassword:"",
+      firstName: '',
+      lastName: '',
+      emailAddress: '',
+      password: '',
+      confirmPassword: '',
+      errors:''
     };
   }
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value });
+      [event.target.id]: event.target.value,
+    });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log(event);
-      // axios.post('http://localhost:5000/api/users')
-      //     .then(response => {
-      //       console.log(response.data);
-      //       this.setState({
-      //         users: response.data,
-      //       })
-      //       // localStorage.setItem('token', response.data._id);
-      //     })
-      //     .catch(error => {
-      //       console.log('Error fetching and parsing data', error);
-      //     });
+    const newUser = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      emailAddress: this.state.emailAddress,
+      password: this.state.password,
+    };
+
+    axios.post('http://localhost:5000/api/users', newUser)
+        .then(response => {
+          // this.setState({
+          //   users: response.data,
+          // });
+          console.log(response.data);
+          // localStorage.setItem('token', response.data._id);
+        })
+        .catch(error => {
+          console.log(error.response.data);
+          this.setState({errors:error.response.data.message});
+        });
   };
 
   render() {
+    const errorMessage = this.state.errors!==""?<div>
+      <h2 className="validation--errors--label">
+        Validation errors
+      </h2>
+      <div className="validation-errors">
+        <ul>
+          <li>{this.state.errors}</li>
+        </ul>
+      </div>
+    </div>:"";
     return (
         <div className="bounds">
           <div className="grid-33 centered signin">
             <h1>Sign Up</h1>
             <div>
-              <form>
+              <form onSubmit={this.handleSubmit}>
                 <div>
+                  {errorMessage}
                   <input id="firstName" name="firstName" type="text"
-                         className=""
-                         placeholder="First Name" value=""/></div>
+                         className="" placeholder="First Name"
+                         value={this.state.firstName}
+                         onChange={this.handleChange}
+                  />
+                </div>
                 <div><input id="lastName" name="lastName" type="text"
                             className=""
-                            placeholder="Last Name" value=""/></div>
+                            placeholder="Last Name" value={this.state.lastName}
+                            onChange={this.handleChange}
+                /></div>
                 <div><input id="emailAddress" name="emailAddress" type="text"
-                            className="" placeholder="Email Address" value=""/>
+                            className="" placeholder="Email Address"
+                            value={this.state.emailAddress}
+                            onChange={this.handleChange}
+                />
                 </div>
                 <div><input id="password" name="password" type="password"
                             className=""
-                            placeholder="Password" value=""/></div>
+                            placeholder="Password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                />
+                </div>
                 <div><input id="confirmPassword" name="confirmPassword"
                             type="password" className=""
                             placeholder="Confirm Password"
-                            value=""/></div>
+                            value={this.state.confirmPassword}
+                            onChange={this.handleChange}
+                /></div>
                 <div className="grid-100 pad-bottom">
                   <button className="button" type="submit">Sign Up</button>
                   <Link to="/">
@@ -68,8 +102,7 @@ class UserSignUp extends Component {
                 </div>
               </form>
             </div>
-            <p>Already have a user account? <Link to="/signin">Click
-              here</Link> to sign in!</p>
+            <p>Already have a user account? <Link to="/signin">Click here</Link> to sign in!</p>
           </div>
         </div>
     );
