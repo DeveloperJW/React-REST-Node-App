@@ -10,7 +10,7 @@ import UpdateCourse from './Components/UpdateCourse';
 import NotFound from './Components/NotFound';
 import Forbidden from './Components/Forbidden';
 import UnhandledError from './Components/UnhandledError';
-import { Provider } from './Components/Context';
+import UserSignOut from './Components/UserSignOut';
 
 
 class App extends Component {
@@ -23,13 +23,13 @@ class App extends Component {
 
   render() {
     return (
-        <Provider>
           <BrowserRouter>
             <div>
               <Header/>
               <Route path="/" exact component={Courses}/>
               <Route path='/signin' component={UserSignIn}/>
               <Route path='/signup' component={UserSignUp}/>
+              <Route path='/signout' component={UserSignOut}/>
               <Route path='/courses/create' component={CreateCourse}/>
               <Route exact path="/courses/:id" component={CourseDetail}/>
               <Route exact path="/courses/:id/update" component={UpdateCourse}/>
@@ -38,7 +38,6 @@ class App extends Component {
               <Route path="/error" component={UnhandledError}/>
             </div>
           </BrowserRouter>
-        </Provider>
     );
   }
 }

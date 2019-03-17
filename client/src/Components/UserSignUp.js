@@ -1,7 +1,41 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class UserSignUp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      firstName:"",
+      lastName:"",
+      emailAddress: "",
+      password: "",
+      confirmPassword:"",
+    };
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    console.log(event);
+      // axios.post('http://localhost:5000/api/users')
+      //     .then(response => {
+      //       console.log(response.data);
+      //       this.setState({
+      //         users: response.data,
+      //       })
+      //       // localStorage.setItem('token', response.data._id);
+      //     })
+      //     .catch(error => {
+      //       console.log('Error fetching and parsing data', error);
+      //     });
+  };
+
   render() {
     return (
         <div className="bounds">

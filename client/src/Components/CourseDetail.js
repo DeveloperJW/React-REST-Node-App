@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { CourseConsumer } from './Context';
 import axios from 'axios';
 
 const ReactMarkdown = require('react-markdown');
