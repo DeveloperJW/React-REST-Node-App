@@ -6,7 +6,7 @@ import UserSignIn from './Components/UserSignIn';
 import UserSignUp from './Components/UserSignUp';
 import CourseDetail from './Components/CourseDetail';
 import CreateCourse from './Components/CreateCourse';
-// import UpdateCourse from './Components/UpdateCourse';
+import UpdateCourse from './Components/UpdateCourse';
 import NotFound from './Components/NotFound';
 import Forbidden from './Components/Forbidden';
 import UnhandledError from './Components/UnhandledError';
@@ -32,6 +32,7 @@ class App extends Component {
               <Route path='/signup' component={UserSignUp}/>
               <Route path='/courses/create' component={CreateCourse}/>
               <Route exact path="/courses/:id" component={CourseDetail}/>
+              <Route exact path="/courses/:id/update" component={UpdateCourse}/>
               <Route path="/notfound" component={NotFound}/>
               <Route path="/forbidden" component={Forbidden}/>
               <Route path="/error" component={UnhandledError}/>
