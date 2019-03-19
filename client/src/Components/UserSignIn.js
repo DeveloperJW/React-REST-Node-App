@@ -8,7 +8,9 @@ class UserSignIn extends Component {
 
     this.state = {
       emailAddress: "",
-      password: ""
+      password: "",
+      isAuth:false,
+      user:{}
     };
   }
 
@@ -22,21 +24,16 @@ class UserSignIn extends Component {
   //   console.log(event);
   //   this.props.history.goBack();
   // };
-  backToPreviousPage = () =>{
-    if (localStorage.getItem('user')){
-      this.props.history.goBack();
-    }
-  };
 
   render() {
     // console.log(this.props.history);
     return (
         <Consumer>
-          {({actions})=>{
+          {({matchedUser,actions})=>{
             const handleSubmit = (e) =>{
               e.preventDefault();
               actions.signIn(this.state.emailAddress, this.state.password);
-              this.backToPreviousPage();
+              this.props.history.goBack();
             };
         return(
             <div className="bounds">

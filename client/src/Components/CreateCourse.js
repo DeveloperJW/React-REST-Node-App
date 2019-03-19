@@ -1,40 +1,62 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class CreateCourse extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      title: "",
-      description: "",
-      estimatedTime:"",
-      materialsNeeded:""
+      title: '',
+      description: '',
+      estimatedTime: '',
+      materialsNeeded: '',
+      errors:''
     };
   }
 
   handleChange = event => {
     this.setState({
-      [event.target.id]: event.target.value });
+      [event.target.id]: event.target.value,
+    });
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    axios.post('http://localhost:5000/api/courses', {
+      auth: {
+        username: JSON.parse(localStorage.getItem('user')).emailAddress,
+        password: localStorage.getItem('password'),
+      },
+    })
+        .then(response=> {
+          this.setState({
+
+          });
+
+        })
+        .catch(error => {
+          console.log('Error fetching and parsing data', error);
+          this.setState({errors:error.data.message});
+        });
   };
+
   render() {
+    const errorMessage = this.state.errors!==""?<div>
+      <h2 className="validation--errors--label">
+        Validation errors
+      </h2>
+      <div className="validation-errors">
+        <ul>
+          <li>{this.state.errors}</li>
+        </ul>
+      </div>
+    </div>:"";
     return (
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
-            <div>
-              <h2 className="validation--errors--label">Validation errors</h2>
-              <div className="validation-errors">
-                <ul>
-                  <li>Please provide a value for "Title"</li>
-                  <li>Please provide a value for "Description"</li>
-                </ul>
-              </div>
-            </div>
+            {errorMessage}
             <form onSubmit={this.handleSubmit}>
               <div className="grid-66">
                 <div className="course--header">
@@ -42,13 +64,17 @@ class CreateCourse extends Component {
                   <div><input id="title" name="title" type="text"
                               className="input-title course--title--input"
                               placeholder="Course title..."
-                              value=""/></div>
+                              onChange={this.handleChange}
+                              value={this.state.title}/></div>
                   <p>By Joe Smith</p>
                 </div>
                 <div className="course--description">
                   <div><textarea id="description" name="description"
                                  className=""
-                                 placeholder="Course description..."/>
+                                 placeholder="Course description..."
+                                 value={this.state.description}
+                                 onChange={this.handleChange}
+                  />
                   </div>
                 </div>
               </div>
@@ -57,15 +83,23 @@ class CreateCourse extends Component {
                   <ul className="course--stats--list">
                     <li className="course--stats--list--item">
                       <h4>Estimated Time</h4>
-                      <div><input id="estimatedTime" name="estimatedTime"
-                                  type="text" className="course--time--input"
-                                  placeholder="Hours" value=""/></div>
+                      <div>
+                        <input id="estimatedTime" name="estimatedTime"
+                               type="text" className="course--time--input"
+                               placeholder="Hours"
+                               value={this.state.estimatedTime}
+                               onChange={this.handleChange}
+                        />
+                      </div>
                     </li>
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
                       <div><textarea id="materialsNeeded" name="materialsNeeded"
                                      className=""
-                                     placeholder="List materials..."/>
+                                     placeholder="List materials..."
+                                     value={this.state.materialsNeeded}
+                                     onChange={this.handleChange}
+                      />
                       </div>
                     </li>
                   </ul>
@@ -73,9 +107,9 @@ class CreateCourse extends Component {
               </div>
               <div className="grid-100 pad-bottom">
                 <button className="button" type="submit">Create Course</button>
-                <button className="button button-secondary"
-                        onClick="event.preventDefault(); location.href='index.html';">Cancel
-                </button>
+                <Link to="/">
+                  <button className="button button-secondary">Cancel</button>
+                </Link>
               </div>
             </form>
           </div>

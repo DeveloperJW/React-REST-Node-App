@@ -7,12 +7,15 @@ class UpdateCourse extends Component {
     super(props);
 
     this.state = {
+      user:JSON.parse(localStorage.getItem('user'))._id,
+      authHeader:JSON.parse(localStorage.getItem('basicAuthHeader')),
       courseId: props.match.params.id,
       matchedCourse: {},
       title:"",
       description:"",
       materialsNeeded:"",
-      estimatedTime:""
+      estimatedTime:"",
+      errors:""
     };
   }
 
@@ -40,15 +43,52 @@ class UpdateCourse extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    axios.put(`http://localhost:5000/api/courses/${this.state.courseId}`,{
+      user:this.state.user,
+      title:this.state.title,
+      description:this.state.description,
+      materialsNeeded: this.state.materialsNeeded,
+      estimatedTime:this.state.estimatedTime
+    },{
+      auth:{
+        username: JSON.parse(localStorage.getItem('user')).emailAddress,
+        password: localStorage.getItem('password'),
+      }
+    })
+        .then(response => {
+          if (response.status===204){
+            // redirect to the courses
+            console.log("204");
+            // this.props.history.goBack();
+          }
+        })
+        .catch(error => {
+          console.log('Error fetching and parsing data', error);
+          // console.log(error);
+          // console.log(error.data);
+          console.log(error.response.data.message);
+          // this.setState({errors:error.data.message});
+        });
   };
 
 // takes the _id parameter
   render() {
+    const errorMessage = this.state.errors!==""?<div>
+      <h2 className="validation--errors--label">
+        Validation errors
+      </h2>
+      <div className="validation-errors">
+        <ul>
+          <li>{this.state.errors}</li>
+        </ul>
+      </div>
+    </div>:"";
     return (
         <div className="bounds course--detail">
           <h1>Update Course</h1>
           <div>
-            <form>
+              {errorMessage}
+            <form onSubmit={this.handleSubmit}>
               <div className="grid-66">
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>

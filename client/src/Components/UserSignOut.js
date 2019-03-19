@@ -5,9 +5,9 @@ import { Consumer } from './Context';
 const UserSignOut = () => {
   return (
       <Consumer>
-        {({ actions }) => {
+        {({actions})=>{
           actions.signOut();
-          return (
+          return(
               <div>
                 <Redirect to='/'/>
               </div>

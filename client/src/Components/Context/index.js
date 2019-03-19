@@ -1,35 +1,26 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { browserHistory } from 'react-router';
 
 const UserContext = React.createContext();
 
 export class Provider extends Component {
   state = {
     users: [],
-    matchedUser:{},
+    matchedUser:JSON.parse(localStorage.getItem('user')),
     password:"",
-    isAuthenticated:false
+    isAuth:localStorage.getItem('isAuth')
   };
 
   // componentDidMount() {
-  //   axios.get('http://localhost:5000/api/users', {
-  //     auth: {
-  //       username: '',
-  //       password: '',
-  //     },
-  //   })
-  //       .then(response => {
-  //         this.setState({
-  //           users: response.data,
-  //         });
-  //       })
-  //       .catch(error => {
-  //         console.log('Error fetching and parsing data', error);
-  //       });
+  //   if (localStorage.getItem('matchedUser')){
+  //     this.setState({
+  //       isAuth:true,
+  //       matchedUser: JSON.parse(localStorage.getItem('user'))
+  //     })
+  //   }
   // }
 
-  signIn = (username, password) =>{
+  signIn = (username, password) => {
     // this.setState({username, password});
     axios.get('http://localhost:5000/api/users', {
       auth: {
@@ -43,12 +34,14 @@ export class Provider extends Component {
           });
           this.setState({
             users: response.data,
-            password: matchedUser.password,
+            password: password,
             matchedUser:matchedUser,
-            isAuthenticated:true
+            isAuth:true
           });
           localStorage.setItem('user', JSON.stringify(matchedUser));
+          localStorage.setItem('password',password);
           localStorage.setItem('allUser',JSON.stringify(response.data));
+          localStorage.setItem('isAuth',this.state.isAuth);
           localStorage.setItem('basicAuthHeader',JSON.stringify(response.config.headers.Authorization));
         })
         .catch(error => {
@@ -71,15 +64,21 @@ export class Provider extends Component {
   // }
 
 
-  signOut(){
-    // localStorage.removeItem('token');
+  signOut=()=>{
+    this.setState({
+      users: [],
+      matchedUser:{},
+      password:"",
+      isAuth:false
+    });
     localStorage.clear();
-  }
+  };
 
   render() {
     return (
         <UserContext.Provider value={{
-          isAuthenticated: this.state.isAuthenticated,
+          isAuth: this.state.isAuth,
+          matchedUser:this.state.matchedUser,
           actions:{
             signIn: this.signIn,
             signOut: this.signOut

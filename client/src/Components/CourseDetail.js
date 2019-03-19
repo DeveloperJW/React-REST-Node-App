@@ -10,6 +10,7 @@ class CourseDetail extends Component {
     this.state = {
       courseId: props.match.params.id,
       matchedCourse: {},
+      errors:''
     };
   }
 
