@@ -43,18 +43,20 @@ module.exports = {
   async edit(req, res) {
     const credential = auth(req);
     const courseId = req.params.id;
-    const courseProps = req.body;
-    const { error } = validateCourse(courseProps);
+    const courseProps = await Course.findById(courseId);
+    const { error } = validateCourse(req.body);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
     // check if the userId exists in the database
-    const user = await User.findById(courseProps.user);
+    const user = await User.findById(req.body.user);
     if (!user) {
       return res.status(400)
           .send({ message: 'There is no such user with given userId.' });
     }
-    if (user.emailAddress !== credential.name) {
+    const ownerUser = await User.findById(courseProps.user);
+    // console.log("Owner user:"+ownerUser.emailAddress);
+    if (ownerUser.emailAddress !== credential.name) {
       return res.status(403)
           .send({ message: 'You do not own the requested course.' });
     }
@@ -69,14 +71,15 @@ module.exports = {
   async delete(req, res) {
     const credential = auth(req);
     const courseId = req.params.id;
-    const courseProps = req.body;
+    const courseProps = await Course.findById(courseId);
     // check if the userId exists in the database
-    const user = await User.findById(courseProps.user);
+    const user = await User.findById(req.body.user);
     if (!user) {
       return res.status(400)
           .send({ message: 'There is no such user with given userId.' });
     }
-    if (user.emailAddress !== credential.name) {
+    const ownerUser = await User.findById(courseProps.user);
+    if (ownerUser.emailAddress !== credential.name) {
       return res.status(403)
           .send({ message: 'You do not own the requested course.' });
     }

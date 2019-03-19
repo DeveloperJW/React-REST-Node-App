@@ -7,6 +7,7 @@ class CreateCourse extends Component {
     super(props);
 
     this.state = {
+      user:JSON.parse(localStorage.getItem('user'))._id,
       title: '',
       description: '',
       estimatedTime: '',
@@ -23,21 +24,33 @@ class CreateCourse extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    axios.post('http://localhost:5000/api/courses', {
+    axios.post('http://localhost:5000/api/courses',{
+      user:this.state.user,
+      title:this.state.title,
+      description:this.state.description,
+      materialsNeeded: this.state.materialsNeeded,
+      estimatedTime:this.state.estimatedTime
+    } ,{
       auth: {
         username: JSON.parse(localStorage.getItem('user')).emailAddress,
         password: localStorage.getItem('password'),
       },
     })
         .then(response=> {
-          this.setState({
-
-          });
+          // this.setState({
+          //
+          // });
+          if (response.status===201){
+            console.log("Course created.");
+            this.props.history.goBack();
+          } else{
+            console.log("Error on creating the course");
+          }
 
         })
         .catch(error => {
           console.log('Error fetching and parsing data', error);
-          this.setState({errors:error.data.message});
+          this.setState({errors:error.response.data.message});
         });
   };
 

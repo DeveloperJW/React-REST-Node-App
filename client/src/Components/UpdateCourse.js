@@ -59,15 +59,14 @@ class UpdateCourse extends Component {
           if (response.status===204){
             // redirect to the courses
             console.log("204");
+            this.props.history.goBack();
             // this.props.history.goBack();
           }
         })
         .catch(error => {
           console.log('Error fetching and parsing data', error);
-          // console.log(error);
-          // console.log(error.data);
           console.log(error.response.data.message);
-          // this.setState({errors:error.data.message});
+          this.setState({errors:error.response.data.message});
         });
   };
 
