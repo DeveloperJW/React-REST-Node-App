@@ -10,6 +10,9 @@ class Courses extends Component {
   componentDidMount() {
     axios.get('http://localhost:5000/api/courses')
         .then(response => {
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
           this.setState({
             courses: response.data,
           });

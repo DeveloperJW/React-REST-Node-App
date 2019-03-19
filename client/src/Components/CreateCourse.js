@@ -40,6 +40,8 @@ class CreateCourse extends Component {
           if (response.status===201){
             // redirect to the course details page
             this.props.history.goBack();
+          } else if(response.status===500){
+            this.props.history.push('/error');
           }
         })
         .catch(error => {

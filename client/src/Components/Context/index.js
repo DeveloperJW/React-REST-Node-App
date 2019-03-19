@@ -6,19 +6,10 @@ const UserContext = React.createContext();
 export class Provider extends Component {
   state = {
     users: [],
-    matchedUser:JSON.parse(localStorage.getItem('user')),
-    password:"",
-    isAuth:localStorage.getItem('isAuth')
+    matchedUser: JSON.parse(localStorage.getItem('user')),
+    password: '',
+    isAuth: localStorage.getItem('isAuth'),
   };
-
-  // componentDidMount() {
-  //   if (localStorage.getItem('matchedUser')){
-  //     this.setState({
-  //       isAuth:true,
-  //       matchedUser: JSON.parse(localStorage.getItem('user'))
-  //     })
-  //   }
-  // }
 
   signIn = (username, password) => {
     // this.setState({username, password});
@@ -28,48 +19,37 @@ export class Provider extends Component {
         password: password,
       },
     })
-        .then(response=> {
-          const matchedUser = response.data.find((user)=>{
+        .then(response => {
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
+          const matchedUser = response.data.find((user) => {
             return username === user.emailAddress;
           });
           this.setState({
             users: response.data,
             password: password,
-            matchedUser:matchedUser,
-            isAuth:true
+            matchedUser: matchedUser,
+            isAuth: true,
           });
           localStorage.setItem('user', JSON.stringify(matchedUser));
-          localStorage.setItem('password',password);
-          localStorage.setItem('allUser',JSON.stringify(response.data));
-          localStorage.setItem('isAuth',this.state.isAuth);
-          localStorage.setItem('basicAuthHeader',JSON.stringify(response.config.headers.Authorization));
+          localStorage.setItem('password', password);
+          localStorage.setItem('allUser', JSON.stringify(response.data));
+          localStorage.setItem('isAuth', this.state.isAuth);
+          localStorage.setItem('basicAuthHeader',
+              JSON.stringify(response.config.headers.Authorization));
         })
         .catch(error => {
-            console.log('Error fetching and parsing data', error);
+          console.log('Error fetching and parsing data', error);
         });
   };
-  // signUp(username, password){
-  //   axios.post('http://localhost:5000/api/users')
-  //       .then(response => {
-  //         console.log(response.data);
-  //         this.setState({
-  //           users: response.data,
-  //         })
-  //         // localStorage.setItem('token', response.data._id);
-  //       })
-  //       .catch(error => {
-  //         console.log('Error fetching and parsing data', error);
-  //       });
-  //
-  // }
 
-
-  signOut=()=>{
+  signOut = () => {
     this.setState({
       users: [],
-      matchedUser:{},
-      password:"",
-      isAuth:false
+      matchedUser: {},
+      password: '',
+      isAuth: false,
     });
     localStorage.clear();
   };
@@ -78,11 +58,11 @@ export class Provider extends Component {
     return (
         <UserContext.Provider value={{
           isAuth: this.state.isAuth,
-          matchedUser:this.state.matchedUser,
-          actions:{
+          matchedUser: this.state.matchedUser,
+          actions: {
             signIn: this.signIn,
-            signOut: this.signOut
-          }
+            signOut: this.signOut,
+          },
         }}>
           {this.props.children}
         </UserContext.Provider>

@@ -12,7 +12,7 @@ class UserSignUp extends Component {
       emailAddress: '',
       password: '',
       confirmPassword: '',
-      errors:''
+      errors: '',
     };
   }
 
@@ -33,20 +33,21 @@ class UserSignUp extends Component {
 
     axios.post('http://localhost:5000/api/users', newUser)
         .then(response => {
-          // this.setState({
-          //   users: response.data,
-          // });
-          console.log(response.data);
-          // localStorage.setItem('token', response.data._id);
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
+          if (response.status === 201) {
+            this.props.history.push('/signin');
+          }
         })
         .catch(error => {
-          console.log(error.response.data);
-          this.setState({errors:error.response.data.message});
+          // console.log(error.response.data);
+          this.setState({ errors: error.response.data.message });
         });
   };
 
   render() {
-    const errorMessage = this.state.errors!==""?<div>
+    const errorMessage = this.state.errors !== '' ? <div>
       <h2 className="validation--errors--label">
         Validation errors
       </h2>
@@ -55,7 +56,7 @@ class UserSignUp extends Component {
           <li>{this.state.errors}</li>
         </ul>
       </div>
-    </div>:"";
+    </div> : '';
     return (
         <div className="bounds">
           <div className="grid-33 centered signin">
@@ -102,7 +103,8 @@ class UserSignUp extends Component {
                 </div>
               </form>
             </div>
-            <p>Already have a user account? <Link to="/signin">Click here</Link> to sign in!</p>
+            <p>Already have a user account? <Link to="/signin">Click
+              here</Link> to sign in!</p>
           </div>
         </div>
     );

@@ -20,6 +20,9 @@ class CourseDetail extends Component {
   componentDidMount() {
     axios.get(`http://localhost:5000/api/courses/${this.state.courseId}`)
         .then(response => {
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
           this.setState({
             matchedCourse: response.data,
             ownerUserName: response.data.user.firstName + ' ' + response.data.user.lastName,
@@ -27,7 +30,12 @@ class CourseDetail extends Component {
           });
         })
         .catch(error => {
-          console.log('Error fetching and parsing data', error);
+          // console.log('Error fetching and parsing data', error);
+          if (error.response.status === 404){
+            this.props.history.push('/notfound');
+          } else if(error.response.status === 500){
+            this.props.history.push('/error');
+          }
         });
   }
 

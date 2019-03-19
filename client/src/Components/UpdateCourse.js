@@ -63,6 +63,8 @@ class UpdateCourse extends Component {
             console.log("204");
             this.props.history.goBack();
             // this.props.history.goBack();
+          } else if (response.status === 500) {
+            this.props.history.push('/error');
           }
         })
         .catch(error => {
