@@ -15,7 +15,8 @@ class UpdateCourse extends Component {
       description:"",
       materialsNeeded:"",
       estimatedTime:"",
-      errors:""
+      errors:"",
+      ownerUserName:""
     };
   }
 
@@ -27,7 +28,8 @@ class UpdateCourse extends Component {
             title:response.data.title,
             description:response.data.description,
             materialsNeeded: response.data.materialsNeeded,
-            estimatedTime:response.data.estimatedTime
+            estimatedTime:response.data.estimatedTime,
+            ownerUserName:response.data.user.firstName+" "+response.data.user.lastName
 
           });
         })
@@ -94,7 +96,7 @@ class UpdateCourse extends Component {
                   <h3 className="course--title" onChange={this.handleChange}>
                     {this.state.title}
                   </h3>
-                  <p>By Joe Smith</p>
+                  <p>By {this.state.ownerUserName}</p>
                 </div>
                 <div className="course--description">
                 <textarea id="description" name="description"

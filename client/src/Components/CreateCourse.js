@@ -37,19 +37,13 @@ class CreateCourse extends Component {
       },
     })
         .then(response=> {
-          // this.setState({
-          //
-          // });
           if (response.status===201){
-            console.log("Course created.");
+            // redirect to the course details page
             this.props.history.goBack();
-          } else{
-            console.log("Error on creating the course");
           }
-
         })
         .catch(error => {
-          console.log('Error fetching and parsing data', error);
+          // console.log('Error fetching and parsing data', error);
           this.setState({errors:error.response.data.message});
         });
   };

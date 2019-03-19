@@ -10,7 +10,10 @@ class CourseDetail extends Component {
     this.state = {
       courseId: props.match.params.id,
       matchedCourse: {},
-      errors:''
+      errors: '',
+      currentUser: localStorage.getItem('user'),
+      ownerUserId: '',
+      ownerUserName: '',
     };
   }
 
@@ -19,6 +22,8 @@ class CourseDetail extends Component {
         .then(response => {
           this.setState({
             matchedCourse: response.data,
+            ownerUserName: response.data.user.firstName + ' ' + response.data.user.lastName,
+            ownerUserId: response.data.user._id,
           });
         })
         .catch(error => {
@@ -28,18 +33,21 @@ class CourseDetail extends Component {
 
 // takes the _id parameter
   render() {
-
+    const currentUserId = this.state.currentUser===null?"":JSON.parse(this.state.currentUser)._id;
+    const navButton = (currentUserId !== '' &&
+        this.state.ownerUserId === currentUserId)
+        ? <span>
+          <Link to={this.props.location.pathname + '/update'}>
+            <button className="button">Update Course</button>
+          </Link>
+          <Link to="/courses/delete"><button className="button">Delete Course</button></Link></span>
+        : "";
     return (
         <React.Fragment>
           <div className="actions--bar">
             <div className="bounds">
               <div className="grid-100">
-                        <span>
-                          <Link to={this.props.location.pathname+'/update'}>
-                            <button className="button">Update Course</button>
-                          </Link>
-                          <Link to="/courses/delete"><button className="button">Delete Course</button></Link>
-                        </span>
+                       {navButton}
                 <Link to="/">
                   <button className="button button-secondary">Return to List
                   </button>
@@ -52,7 +60,7 @@ class CourseDetail extends Component {
               <div className="course--header">
                 <h4 className="course--label">Course</h4>
                 <h3 className="course--title">{this.state.matchedCourse.title}</h3>
-                <p>By Joe Smith</p>
+                <p>By {this.state.ownerUserName}</p>
               </div>
               <div className="course--description">
                 <ReactMarkdown source={this.state.matchedCourse.description}/>
@@ -67,7 +75,8 @@ class CourseDetail extends Component {
                   </li>
                   <li className="course--stats--list--item">
                     <h4>Materials Needed</h4>
-                    <ReactMarkdown source={this.state.matchedCourse.materialsNeeded}/>
+                    <ReactMarkdown
+                        source={this.state.matchedCourse.materialsNeeded}/>
                   </li>
                 </ul>
               </div>
