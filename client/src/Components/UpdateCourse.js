@@ -35,6 +35,11 @@ class UpdateCourse extends Component {
             ownerUserName:response.data.user.firstName+" "+response.data.user.lastName
 
           });
+          // if the user hard coded url to get to the update page
+          // redirect to forbidden page
+          if (response.status===200 && this.state.user!==this.state.matchedCourse.user._id){
+            this.props.history.push('/forbidden');
+          }
         })
         .catch(error => {
           // console.log('Error fetching and parsing data', error);
