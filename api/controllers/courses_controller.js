@@ -60,7 +60,7 @@ module.exports = {
       return res.status(403)
           .send({ message: 'You do not own the requested course.' });
     }
-    const course = await Course.findByIdAndUpdate(courseId, courseProps);
+    const course = await Course.findByIdAndUpdate(courseId, req.body);
     if (!course) {
       return res.status(404)
           .send({ message: 'There is no course with the given id' });
