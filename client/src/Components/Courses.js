@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+// the component shows on home page, render the list of courses from API server
 class Courses extends Component {
   state = {
     courses: [],

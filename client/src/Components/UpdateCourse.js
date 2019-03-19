@@ -23,6 +23,9 @@ class UpdateCourse extends Component {
   componentDidMount() {
     axios.get(`http://localhost:5000/api/courses/${this.state.courseId}`)
         .then(response => {
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
           this.setState({
             matchedCourse: response.data,
             title:response.data.title,
@@ -34,7 +37,12 @@ class UpdateCourse extends Component {
           });
         })
         .catch(error => {
-          console.log('Error fetching and parsing data', error);
+          // console.log('Error fetching and parsing data', error);
+          if (error.response.status === 404){
+            this.props.history.push('/notfound');
+          } else if(error.response.status === 500){
+            this.props.history.push('/error');
+          }
         });
   }
 
@@ -59,8 +67,7 @@ class UpdateCourse extends Component {
     })
         .then(response => {
           if (response.status===204){
-            // redirect to the courses
-            console.log("204");
+            // redirect to the courses details page is status is 204
             this.props.history.goBack();
             // this.props.history.goBack();
           } else if (response.status === 500) {
@@ -95,9 +102,10 @@ class UpdateCourse extends Component {
               <div className="grid-66">
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
-                  <h3 className="course--title" onChange={this.handleChange}>
-                    {this.state.title}
-                  </h3>
+                  <input id="title" name="title" type="text"
+                         className="input-title course--title--input"
+                         onChange={this.handleChange}
+                         value={this.state.title}/>
                   <p>By {this.state.ownerUserName}</p>
                 </div>
                 <div className="course--description">

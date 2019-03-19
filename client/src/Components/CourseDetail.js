@@ -20,6 +20,7 @@ class CourseDetail extends Component {
   componentDidMount() {
     axios.get(`http://localhost:5000/api/courses/${this.state.courseId}`)
         .then(response => {
+          // if the request status code is 500, redirect to error page
           if (response.status === 500) {
             this.props.history.push('/error');
           }
@@ -39,8 +40,39 @@ class CourseDetail extends Component {
         });
   }
 
-// takes the _id parameter
+  // the following method is used to handle course delete
+  handleDelete = event =>{
+    axios.delete(`http://localhost:5000/api/courses/${this.state.courseId}`,{
+      auth:{
+        username: JSON.parse(localStorage.getItem('user')).emailAddress,
+        password: localStorage.getItem('password'),
+      }
+    })
+        .then(response => {
+          // if the request status code is 500, redirect to error page
+          if (response.status === 500) {
+            this.props.history.push('/error');
+          }
+          if (response.status===204){
+            // if the status code is... meaning the delete is success
+            // redirect user to home page
+            this.props.history.push('/');
+          }
+        })
+        .catch(error => {
+          // console.log('Error fetching and parsing data', error);
+          this.setState({
+            errors:error.response.data.message
+          });
+        });
+  };
+
+
+  // renders the page based on html markups
   render() {
+    // first, check if there is authenticated user
+    // and check if the authenticated user is equals to the user who created the course
+    // if user matches, display the update and delete button, else hide those buttons
     const currentUserId = this.state.currentUser===null?"":JSON.parse(this.state.currentUser)._id;
     const navButton = (currentUserId !== '' &&
         this.state.ownerUserId === currentUserId)
@@ -48,7 +80,9 @@ class CourseDetail extends Component {
           <Link to={this.props.location.pathname + '/update'}>
             <button className="button">Update Course</button>
           </Link>
-          <Link to="/courses/delete"><button className="button">Delete Course</button></Link></span>
+            <button className="button" onClick={this.handleDelete}>
+              Delete Course
+            </button></span>
         : "";
     return (
         <React.Fragment>

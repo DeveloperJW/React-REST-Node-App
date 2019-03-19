@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+// components for courses/create
 class CreateCourse extends Component {
   constructor(props) {
     super(props);

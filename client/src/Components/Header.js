@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Consumer } from './Context';
 
+// stateless component
+// first check if there is authenticated user
+// if there is, display a welcome message, else just show sign in and signup button
 const Header = () => {
   return (
       <Consumer>{({ matchedUser, isAuth }) =>

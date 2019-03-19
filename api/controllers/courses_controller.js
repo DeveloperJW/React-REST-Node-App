@@ -73,11 +73,11 @@ module.exports = {
     const courseId = req.params.id;
     const courseProps = await Course.findById(courseId);
     // check if the userId exists in the database
-    const user = await User.findById(req.body.user);
-    if (!user) {
-      return res.status(400)
-          .send({ message: 'There is no such user with given userId.' });
-    }
+    // const user = await User.findById(req.body.user);
+    // if (!user) {
+    //   return res.status(400)
+    //       .send({ message: 'There is no such user with given userId.' });
+    // }
     const ownerUser = await User.findById(courseProps.user);
     if (ownerUser.emailAddress !== credential.name) {
       return res.status(403)

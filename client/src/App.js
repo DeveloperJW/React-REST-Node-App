@@ -14,7 +14,8 @@ import UserSignOut from './Components/UserSignOut';
 import PrivateRoute from './Components/PrivateRoute';
 
 class App extends Component {
-
+  // config the routes needed
+  // added PrivateRoute for protected routes on creating courses and updating
   render() {
     return (
         <BrowserRouter>
