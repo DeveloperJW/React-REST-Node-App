@@ -4,7 +4,7 @@
 
   - This project is created for the purpose of JavaScript Full Stack TechDegree - Unit 10 with TeamTreehouse. 
   
-  - The app will be deployed to herokuapp: [Click here for live demo]()
+  - The app will be deployed to herokuapp for live demo soon.
   
   
 - Project Description:
